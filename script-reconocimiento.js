@@ -308,7 +308,7 @@ async function capturarYReconocer() {
         }
       },
       "image/jpeg",
-      0.8,
+      1.0,
     );
   } catch (error) {
     console.error("Error en captura:", error);
@@ -431,48 +431,45 @@ async function reconocerImagen() {
 
 // Mostrar resultados
 function showResults(data) {
-  try {
-    const resultsSection = document.getElementById("resultsSection");
-    const resultsContent = document.getElementById("resultsContent");
+  const resultsSection = document.getElementById("resultsSection");
+  const resultsContent = document.getElementById("resultsContent");
 
-    if (!resultsSection || !resultsContent) {
-      console.error("Elementos de resultados no encontrados");
-      return;
+  if (!resultsSection || !resultsContent) return;
+
+  let content = "";
+
+  if (Array.isArray(data)) {
+    // Caso anterior (varios rostros)
+    if (data.length > 0) {
+      content = data.map(person => `
+        <div class="result-item">
+            <div class="result-name">${person.nombre || 'Desconocido'}</div>
+            <div class="result-confidence">Confianza: ${(person.confianza || 0).toFixed(2)}%</div>
+        </div>`).join("");
     }
-
-    let content = "";
-
-    if (data && Array.isArray(data) && data.length > 0) {
-      content = data
-        .map(
-          (person) => `
-              <div class="result-item">
-                  <div class="result-name">${person.nombre || 'Desconocido'}</div>
-                  <div class="result-confidence">Confianza: ${(person.confianza || 0).toFixed(2)}%</div>
-              </div>
-          `,
-        )
-        .join("");
-
-      showNotification(`Se reconocieron ${data.length} rostro(s)`, "success");
-    } else {
-      content = `
-              <div class="no-results">
-                  <div class="no-results-icon">🔍</div>
-                  <h3>No se reconocieron rostros</h3>
-                  <p>Intenta con una imagen más clara o con mejor iluminación</p>
-              </div>
-          `;
-
-      showNotification("No se detectaron rostros en la imagen", "info");
-    }
-
-    resultsContent.innerHTML = content;
-    resultsSection.style.display = "flex";
-  } catch (error) {
-    console.error("Error mostrando resultados:", error);
-    showNotification("Error al mostrar los resultados", "error");
+  } else if (typeof data === 'object' && data.nombre) {
+    // ✅ Caso KNN (un solo rostro)
+    content = `
+      <div class="result-item">
+          <div class="result-name">${data.nombre}</div>
+          <div class="result-confidence">Confianza: ${data.confianza.toFixed(2)}%</div>
+      </div>`;
   }
+
+  if (content) {
+    resultsContent.innerHTML = content;
+    showNotification("Rostro reconocido correctamente", "success");
+  } else {
+    resultsContent.innerHTML = `
+      <div class="no-results">
+          <div class="no-results-icon">🔍</div>
+          <h3>No se reconocieron rostros</h3>
+          <p>Intenta con una imagen más clara o con mejor iluminación</p>
+      </div>`;
+    showNotification("No se detectaron rostros en la imagen", "info");
+  }
+
+  resultsSection.style.display = "flex";
 }
 
 // Funciones de utilidad
