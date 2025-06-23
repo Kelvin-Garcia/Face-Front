@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartFace - Reconocimiento Facial</title>
+    <link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles-reconocimiento.css">
+</head>
+<body>
+    <!-- Decorative elements -->
+    <div class="face-icon face-1">👤</div>
+    <div class="face-icon face-2">🔍</div>
+    <div class="face-icon face-3">📷</div>
+    <div class="face-icon face-4">🤖</div>
+    <div class="face-icon face-5">👁️</div>
+    <div class="face-icon face-6">🎯</div>
+
+    <div class="container">
+        <div class="main-container" id="mainContainer">
+            <!-- Header Section -->
+            <div class="header" id="header">
+                <div class="logo-section">
+                    <div class="logo-icon">🧠</div>
+                    <h1 class="title">SmartFace</h1>
+                    <p class="subtitle">Sistema de Reconocimiento Facial Avanzado</p>
+                </div>
+            </div>
+
+            <!-- Main Menu -->
+            <div class="menu-section" id="menuSection">
+                <div class="menu-card">
+                    <div class="card-icon">📹</div>
+                    <h3 class="card-title">Cámara en Tiempo Real</h3>
+                    <p class="card-description">Reconocimiento facial usando la cámara de tu dispositivo</p>
+                    <button class="btn btn-camera" onclick="openCameraMode()">
+                        <span class="btn-icon">📷</span>
+                        Activar Cámara
+                    </button>
+                </div>
+
+                <div class="menu-card">
+                    <div class="card-icon">📁</div>
+                    <h3 class="card-title">Subir Imagen</h3>
+                    <p class="card-description">Analizar rostros desde archivos de imagen</p>
+                    <button class="btn btn-upload" onclick="openUploadMode()">
+                        <span class="btn-icon">📤</span>
+                        Subir Archivo
+                    </button>
+                </div>
+            </div>
+
+            <!-- Camera Mode -->
+            <div class="mode-section camera-mode" id="cameraMode" style="display: none;">
+                <div class="mode-header">
+                    <h2 class="mode-title">Reconocimiento por Cámara</h2>
+                </div>
+                <button class="btn btn-back" onclick="backToMenu()">
+                  ← Volver
+                </button>
+
+                <div class="camera-container">
+                    <div class="video-wrapper">
+                        <video id="video" autoplay playsinline></video>
+                        <div class="video-overlay" id="videoOverlay">
+                            <div class="scanning-line"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="camera-controls">
+                        <button class="btn btn-capture" id="captureBtn" onclick="capturarYReconocer()">
+                            <span class="btn-icon">📸</span>
+                            Capturar y Analizar
+                        </button>
+                        <div class="camera-status" id="cameraStatus">
+                            <span class="status-indicator"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upload Mode -->
+            <div class="mode-section upload-mode" id="uploadMode" style="display: none;">
+                <div class="mode-header">
+                    <h2 class="mode-title">Subir Imagen</h2>
+                </div>
+                <button class="btn btn-back" onclick="backToMenu()">
+                  ← Volver
+                </button>
+
+                <div class="upload-container">
+                    <div class="upload-area" id="uploadArea">
+                        <div class="upload-icon">📁</div>
+                        <h3>Arrastra tu imagen aquí</h3>
+                        <p>o haz clic para seleccionar</p>
+                        <input type="file" id="imageInput" accept="image/*" hidden>
+                        <button class="btn btn-select" onclick="document.getElementById('imageInput').click()">
+                            Seleccionar Archivo
+                        </button>
+                    </div>
+
+                    <div class="preview-container" id="previewContainer" style="display: none;">
+                        <img id="imagePreview" alt="Vista previa">
+                        <div class="preview-controls">
+                            <button class="btn btn-analyze" onclick="reconocerImagen()">
+                                <span class="btn-icon">🔍</span>
+                                Analizar Imagen
+                            </button>
+                            <button class="btn btn-clear" onclick="clearPreview()">
+                                <span class="btn-icon">🗑️</span>
+                                Limpiar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Results Section -->
+    <div class="results-section" id="resultsSection" style="display: none;">
+      <div class="results-modal">
+        <div class="results-header">
+          <h3>Resultados del Análisis</h3>
+            <button class="btn-close-results" onclick="closeResults()">×</button>
+        </div>
+        <div class="results-content" id="resultsContent">
+                  <!-- Aquí van los resultados -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p id="loadingText">Procesando imagen...</p>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification">
+        <span id="notificationText"></span>
+    </div>
+
+    <script src="script-reconocimiento.js"></script>
+</body>
+</html>
